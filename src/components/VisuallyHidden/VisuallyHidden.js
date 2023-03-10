@@ -2,11 +2,7 @@ import React from 'react';
 
 import styles from './VisuallyHidden.module.css';
 
-const VisuallyHidden = ({
-  children,
-  className = '',
-  ...delegated
-}) => {
+const VisuallyHidden = ({ children, className = '', ...delegated }) => {
   const [forceShow, setForceShow] = React.useState(false);
 
   React.useEffect(() => {
@@ -36,7 +32,10 @@ const VisuallyHidden = ({
   }
 
   return (
-    <span className={`${className} ${styles.wrapper}`} {...delegated}>
+    <span
+      className={`${className} ${styles.wrapper}`}
+      {...delegated}
+    >
       {children}
     </span>
   );
