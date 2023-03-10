@@ -3,6 +3,7 @@ import React from 'react';
 import Button from '../Button';
 import Toast from '../Toast';
 import ToastShelf from '../ToastShelf';
+import { ToastsContext } from '../ToastProvider';
 
 import styles from './ToastPlayground.module.css';
 
@@ -11,7 +12,7 @@ const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 function ToastPlayground() {
   const [message, setMessage] = React.useState('');
   const [variant, setVariant] = React.useState('notice');
-  const [toasts, setToasts] = React.useState([]);
+  const { toasts, addToast, removeToast } = React.useContext(ToastsContext);
 
   const messageInputRef = React.useRef(null);
 
@@ -19,22 +20,20 @@ function ToastPlayground() {
     messageInputRef?.current.focus();
   }, []);
 
-  const handleToastDismiss = (key) => () => {
-    setToasts((oldToasts) => oldToasts.filter((toast) => toast.key !== key));
-  };
-
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
-    const newToastKey = crypto.randomUUID();
-    const newToast = {
-      key: newToastKey,
-      variant: variant,
-      children: message,
-      onDismiss: handleToastDismiss(newToastKey),
-    };
-
-    setToasts([...toasts, newToast]);
+    const newToastId = crypto.randomUUID();
+    addToast({
+      id: newToastId,
+      props: {
+        variant,
+        children: message,
+        onDismiss: () => {
+          removeToast(newToastId);
+        },
+      },
+    });
     setMessage('');
     setVariant('notice');
     messageInputRef?.current.focus();
@@ -51,8 +50,11 @@ function ToastPlayground() {
       </header>
 
       <ToastShelf>
-        {toasts.map((toast) => (
-          <Toast {...toast} />
+        {toasts.map(({ id, props }) => (
+          <Toast
+            key={id}
+            {...props}
+          />
         ))}
       </ToastShelf>
 
