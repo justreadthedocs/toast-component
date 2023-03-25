@@ -7,7 +7,13 @@ export const ToastsContext = React.createContext();
 function ToastProvider({ children }) {
   const [toasts, setToasts] = React.useState([]);
 
-  const addToast = React.useCallback((newToast) => {
+  const addToast = React.useCallback(({ message, variant }) => {
+    const newToast = {
+      id: crypto.randomUUID(),
+      message,
+      variant,
+    };
+
     setToasts((oldToasts) => [...oldToasts, newToast]);
   }, []);
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { AlertOctagon, AlertTriangle, CheckCircle, Info, X } from 'react-feather';
 
 import VisuallyHidden from '../VisuallyHidden';
+import { ToastsContext } from '../ToastProvider';
 
 import styles from './Toast.module.css';
 
@@ -13,7 +14,9 @@ const ICONS_BY_VARIANT = {
   error: AlertOctagon,
 };
 
-function Toast({ children, variant, onDismiss }) {
+function Toast({ toastId, variant, children }) {
+  const { removeToast } = React.useContext(ToastsContext);
+
   if (!VARIANTS.includes(variant)) {
     throw new Error(`Invalid variant: ${variant}. Expected: ${VARIANTS.join(', ')}`);
   }
@@ -33,7 +36,9 @@ function Toast({ children, variant, onDismiss }) {
         aria-label='Dismiss message'
         aria-live='off'
         className={styles.closeButton}
-        onClick={onDismiss}
+        onClick={() => {
+          removeToast(toastId);
+        }}
       >
         <X size={24} />
         <VisuallyHidden>Dismiss message</VisuallyHidden>

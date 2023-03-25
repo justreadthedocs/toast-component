@@ -1,8 +1,13 @@
 import React from 'react';
 
+import Toast from '../Toast/Toast';
+import { ToastsContext } from '../ToastProvider';
+
 import styles from './ToastShelf.module.css';
 
-function ToastShelf({ children }) {
+function ToastShelf() {
+  const { toasts } = React.useContext(ToastsContext);
+
   return (
     <ol
       role='region'
@@ -10,12 +15,17 @@ function ToastShelf({ children }) {
       aria-label='Notification'
       className={styles.wrapper}
     >
-      {children.map((child) => (
+      {toasts.map(({ id, message, variant }) => (
         <li
-          key={child.key}
+          key={id}
           className={styles.toastWrapper}
         >
-          {child}
+          <Toast
+            toastId={id}
+            variant={variant}
+          >
+            {message}
+          </Toast>
         </li>
       ))}
     </ol>

@@ -7,7 +7,7 @@ function useKeyboard(condition, callback) {
         return;
       }
 
-      callback();
+      callback(event);
     };
 
     window.addEventListener('keydown', handleKeyDownEvent);
